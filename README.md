@@ -40,11 +40,11 @@ Bessy the Cow<TAB>5<TAB>Big Farm Way
 ```
 
 The same file with the real bytes is
-[examples/multi-sheet.mtsv](examples/multi-sheet.mtsv).
+[examples/multiple-sheets.mtsv](examples/multiple-sheets.mtsv).
 
 ## Status
 
-Individual Internet-Draft, revision -00. Not adopted by an IETF working group.
+Individual Internet-Draft, revision -01. Not adopted by an IETF working group.
 
 * File extension: `.mtsv`
 * Media type: `text/prs.mtsv` (proposed, not yet registered with IANA)
