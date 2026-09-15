@@ -15,8 +15,8 @@ keyword:
 
 author:
  -
-    fullname: demos-ra
-    email: demos-ra@hotmail.com
+    fullname: Demos Ra
+    email: demos_ra@hotmail.com
 
 normative:
   RFC20:
@@ -447,7 +447,7 @@ Additional information:
   : None
 
 Person & email address to contact for further information:
-: demos-ra (demos-ra@hotmail.com)
+: Demos Ra (demos_ra@hotmail.com)
 
 Intended usage:
 : COMMON
@@ -456,10 +456,10 @@ Restrictions on usage:
 : None
 
 Author:
-: demos-ra
+: Demos Ra
 
 Change controller:
-: demos-ra
+: Demos Ra
 
 
 --- back
