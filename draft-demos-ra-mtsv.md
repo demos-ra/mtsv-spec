@@ -3,7 +3,7 @@ title: "Multi-Sheet Tab-Separated Values (MTSV)"
 abbrev: "MTSV"
 category: info
 
-docname: draft-demos-ra-mtsv-00
+docname: draft-demos-ra-mtsv-01
 submissiontype: IETF
 number:
 date:
@@ -206,7 +206,7 @@ MTSV uses three separators, all of which are ASCII format effectors
 | Separator | Character | Separates | Source |
 |---|---|---|---|
 | tab | HT (%x09) | fields | {{TSV}} |
-| line break | LF (%x0A) or CRLF (%x0D.0A) | records | {{TSV}} |
+| line break | LF (%x0A) or CRLF (%x0D.0A) | records | {{TSV}}, {{CSVW}} |
 | form feed | FF (%x0C) | sheets | {{RFC20}} |
 
 An FF appears only at the start of a line.
@@ -248,11 +248,7 @@ unnamed sheet, and each line that begins with an FF as the start of a
 new sheet.
 
 A parser MUST accept both LF and CRLF as line breaks, consistent with
-the default line terminators in {{CSVW}}. A parser MAY accept a final
-record that is not followed by a line break, consistent with {{RFC4180}}.
-
-A parser MAY ignore a byte order mark at the start of a file, consistent
-with {{Section 8.1 of RFC8259}}.
+the default line terminators in {{CSVW}}.
 
 A parser MAY accept input that does not conform to this document.
 
@@ -266,8 +262,7 @@ consistent with {{Section 9 of RFC8259}}.
 An MTSV generator MUST produce MTSV files that conform to {{syntax}}.
 
 A generator MUST end every record with a line break. A generator
-SHOULD encode MTSV files in UTF-8, consistent with {{RFC2277}}, and MUST
-NOT add a byte order mark, consistent with {{Section 8.1 of RFC8259}}.
+SHOULD encode MTSV files in UTF-8, consistent with {{RFC2277}}.
 
 A field or sheet name that contains HT, LF, FF, or CR cannot be
 represented in MTSV, as with fields that contain a tab in {{TSV}}. A
@@ -466,6 +461,12 @@ Change controller:
 
 # Change Log
 {:removeInRFC="true"}
+
+draft-demos-ra-mtsv-01:
+: Removed the byte order mark rules for parsers and generators. Removed
+  the rule on a final record without a line break, which the rule on
+  non-conforming input already covers. Cited CSVW as the source of LF
+  and CRLF line breaks.
 
 draft-demos-ra-mtsv-00:
 : Initial version.
