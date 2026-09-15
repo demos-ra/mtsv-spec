@@ -18,7 +18,8 @@ form feed, on the same line, is the sheet name.
 | Y    | line feed (LF, 0x0A)  | record |
 | Z    | form feed (FF, 0x0C)  | sheet  |
 
-Every TSV file that contains no form feed is an MTSV file.
+A TSV file that contains no form feed, and no carriage return outside CRLF
+line breaks, is an MTSV file.
 
 MTSV defines structure only: no data types, formulas, or formatting.
 

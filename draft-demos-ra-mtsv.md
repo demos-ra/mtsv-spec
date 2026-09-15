@@ -36,10 +36,11 @@ informative:
   RFC6657:
   RFC8259:
   CSVW:
-    target: https://www.w3.org/TR/tabular-data-model/
+    target: https://www.w3.org/TR/2015/REC-tabular-data-model-20151217/
     title: "Model for Tabular Data and Metadata on the Web"
     author:
       org: W3C
+    date: 2015-12-17
   UAX14:
     target: https://www.unicode.org/reports/tr14/
     title: "Unicode Line Breaking Algorithm"
@@ -61,21 +62,23 @@ informative:
     title: "Open Document Format for Office Applications (OpenDocument) Version 1.3"
     author:
       org: OASIS
+    date: 2021-04-27
   OOXML:
-    title: "Office Open XML File Formats"
+    title: "Information technology - Document description and processing languages - Office Open XML File Formats - Part 1: Fundamentals and Markup Language Reference"
     author:
       org: ISO/IEC
     seriesinfo:
-      ISO/IEC: 29500
+      ISO/IEC: 29500-1:2016
+    date: 2016
 
 --- abstract
 
 This document defines Multi-Sheet Tab-Separated Values (MTSV), a text
 format that carries one or more sheets of tab-separated values in a
 single file. MTSV is TSV with one additional dimension: sheets are
-separated by the ASCII form feed (FF) character. Every TSV file that
-contains no FF is an MTSV file. This document also registers the
-text/prs.mtsv media type.
+separated by the ASCII form feed (FF) character. A TSV file that
+contains no FF, and no CR other than in CRLF line breaks, is an MTSV
+file. This document also registers the text/prs.mtsv media type.
 
 
 --- middle
@@ -99,7 +102,7 @@ next sheet.
 MTSV keeps the separators and structure of TSV, and adds only one
 separator, FF, and a name for each sheet.
 
-MTSV does not carry over three restrictions of the TSV grammar:
+MTSV does not carry over these restrictions of the TSV grammar:
 
 * A field can be empty, and a record can consist of a single field, as
   in {{RFC4180}}.
@@ -107,7 +110,8 @@ MTSV does not carry over three restrictions of the TSV grammar:
 * A sheet can consist of a header with no records, or of no lines at
   all, as a sheet can have no rows in {{OOXML}}.
 
-Every TSV file that contains no FF is an MTSV file ({{data-model}}).
+A TSV file that contains no FF, and no CR other than in CRLF line
+breaks, is an MTSV file ({{data-model}}).
 
 ## Out of Scope
 
@@ -181,8 +185,8 @@ an unnamed sheet only if the file contains at least one line before the
 first FF. An empty sheet name is permitted. Sheet names are not required
 to be unique.
 
-A TSV file that contains no FF is an MTSV file that consists of exactly
-one unnamed sheet.
+A TSV file that contains no FF, and no CR other than in CRLF line
+breaks, is an MTSV file that consists of exactly one unnamed sheet.
 
 
 # Syntax {#syntax}
@@ -443,7 +447,7 @@ Additional information:
   : None
 
 Person & email address to contact for further information:
-: demos-ra <demos-ra@hotmail.com>
+: demos-ra (demos-ra@hotmail.com)
 
 Intended usage:
 : COMMON
