@@ -5,6 +5,7 @@ This repository holds the specification for Multi-Sheet Tab-Separated Values
 
 * [Official copy on the IETF Datatracker](https://datatracker.ietf.org/doc/draft-demos-ra-mtsv/)
 * [Specification source](draft-demos-ra-mtsv.md)
+* [Implementations](https://github.com/demos-ra/mtsv)
 
 ## What it is
 
@@ -51,7 +52,7 @@ Individual Internet-Draft, revision -00. Not adopted by an IETF working group.
 ## Contributing
 
 Discuss the specification or report problems in
-[GitHub Issues](https://github.com/demos-ra/mtsv/issues).
+[GitHub Issues](https://github.com/demos-ra/mtsv-spec/issues).
 
 ## License
 
