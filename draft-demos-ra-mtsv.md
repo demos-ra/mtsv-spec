@@ -45,6 +45,17 @@ informative:
     title: "Unicode Line Breaking Algorithm"
     author:
       org: Unicode Consortium
+  UCD:
+    target: https://www.unicode.org/ucd/
+    title: "Unicode Character Database"
+    author:
+      org: Unicode Consortium
+  XML:
+    target: https://www.w3.org/TR/2008/REC-xml-20081126/
+    title: "Extensible Markup Language (XML) 1.0 (Fifth Edition)"
+    author:
+      org: W3C
+    date: 2008-11-26
   ODF:
     target: https://docs.oasis-open.org/office/OpenDocument/v1.3/
     title: "Open Document Format for Office Applications (OpenDocument) Version 1.3"
@@ -83,7 +94,7 @@ pre-determined printing line on the next form or page". Tab gives the
 next field, line feed gives the next record, and form feed gives the
 next sheet.
 
-## Relationship to TSV
+## Relationship to TSV {#relationship}
 
 MTSV keeps the separators and structure of TSV, and adds only one
 separator, FF, and a name for each sheet.
@@ -200,7 +211,7 @@ An FF appears only at the start of a line.
 
 A sheet name is written on the line that begins with an FF, directly
 after the FF, and ends at the line break. A sheet name follows the same
-rules as a field: it cannot contain HT, CR, LF, or FF.
+rules as a field: it cannot contain HT, LF, FF, or CR.
 
 ## Grammar
 
@@ -229,7 +240,8 @@ the same number of fields as the header of that sheet, as required by
 An MTSV parser MUST accept every MTSV file that conforms to {{syntax}}.
 
 A parser MUST treat the lines before the first FF, if any, as the
-unnamed sheet, and each FF line as the start of a new sheet.
+unnamed sheet, and each line that begins with an FF as the start of a
+new sheet.
 
 A parser MUST accept both LF and CRLF as line breaks, consistent with
 the default line terminators in {{CSVW}}. A parser MAY accept a final
@@ -253,7 +265,7 @@ A generator MUST end every record with a line break. A generator
 SHOULD encode MTSV files in UTF-8, consistent with {{RFC2277}}, and MUST
 NOT add a byte order mark, consistent with {{Section 8.1 of RFC8259}}.
 
-A field or sheet name that contains HT, CR, LF, or FF cannot be
+A field or sheet name that contains HT, LF, FF, or CR cannot be
 represented in MTSV, as with fields that contain a tab in {{TSV}}. A
 generator MUST NOT write such a value. How a generator handles such
 values is out of scope.
@@ -302,10 +314,64 @@ Bessy the Cow<TAB>5
 ~~~
 
 
+# Interoperability Considerations {#interop}
+
+{{relationship}} describes which TSV files are MTSV files. This section
+describes how common text processing affects MTSV files.
+
+MTSV gives structure to four characters: HT, LF, FF, and CR. These
+characters also have other standard properties, and text processing
+that acts on those properties can change the structure of an MTSV file:
+
+Line splitting:
+: FF has the mandatory break class in {{UAX14}}. An application that
+  supports only TSV can present a line that begins with an FF either as a
+  record whose first field begins with FF, or as an empty line followed
+  by a line that contains the sheet name.
+
+Whitespace:
+: HT, LF, FF, and CR have the White_Space property in {{UCD}}. Trimming
+  whitespace from a line can remove an FF, which turns a sheet name
+  into a record, or remove an HT at either end of a line, which removes
+  empty fields. Splitting a line on runs of whitespace removes empty
+  fields and splits fields that contain spaces.
+
+Tab expansion:
+: Replacing HT with spaces removes the field structure, as it does for
+  {{TSV}}.
+
+Control characters:
+: FF is a control character. Applications that remove or reject control
+  characters remove sheet boundaries. {{XML}} does not permit FF, so an
+  MTSV file cannot be carried as XML 1.0 character data without an
+  additional encoding.
+
+Line endings:
+: Converting between LF and CRLF does not change the structure of an
+  MTSV file ({{parsers}}). Converting line breaks to CR alone produces a
+  file that does not conform to this document.
+
+Concatenation:
+: Concatenating MTSV files produces an MTSV file that contains the
+  sheets of each file, in order, only if each non-empty file ends with a
+  line break and each non-empty file after the first begins with an FF.
+  Otherwise, the unnamed sheet of a later file becomes part of the last
+  sheet of the file before it.
+
+Unchanged structure:
+: Printing, Unicode normalization, and conversion between character
+  sets do not change the structure of an MTSV file.
+
+Spreadsheets:
+: Spreadsheet applications apply their own rules to sheet names, such
+  as uniqueness and length, and to data types and sizes. These rules are
+  outside the scope of this document.
+
+
 # Security Considerations {#security}
 
 MTSV files are text and contain no executable content. {{TSV}} lists no
-security considerations; MTSV adds only a separator and sheet names.
+security considerations.
 
 Applications that import MTSV files into spreadsheets can interpret
 fields that begin with characters such as "=", "+", "-", or "@" as
@@ -351,12 +417,7 @@ Security considerations:
 : See {{security}}.
 
 Interoperability considerations:
-: Every TSV file {{TSV}} that contains no FF is an MTSV file. How an
-  application that supports only TSV presents an MTSV file depends on
-  how it splits lines: some applications treat FF as a character
-  within a field, while others treat FF as a line break, as in
-  {{UAX14}}. Sheet names are not required to be unique; applications
-  that require unique names need to handle duplicates.
+: See {{interop}}.
 
 Published specification:
 : This document.
