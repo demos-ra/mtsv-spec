@@ -3,7 +3,7 @@ title: "Multi-Sheet Tab-Separated Values (MTSV)"
 abbrev: "MTSV"
 category: info
 
-docname: draft-demos-ra-mtsv-01
+docname: draft-demosra-mtsv-00
 submissiontype: IETF
 number:
 date:
@@ -12,6 +12,8 @@ keyword:
  - tsv
  - tabular data
  - media type
+venue:
+  github: demos-ra/mtsv-spec
 
 author:
  -
@@ -70,6 +72,8 @@ informative:
     seriesinfo:
       ISO/IEC: 29500-1:2016
     date: 2016
+
+...
 
 --- abstract
 
@@ -462,11 +466,12 @@ Change controller:
 # Change Log
 {:removeInRFC="true"}
 
-draft-demos-ra-mtsv-01:
-: Removed the byte order mark rules for parsers and generators. Removed
-  the rule on a final record without a line break, which the rule on
-  non-conforming input already covers. Cited CSVW as the source of LF
-  and CRLF line breaks.
+draft-demosra-mtsv-00:
+: Replaces draft-demos-ra-mtsv-00, renamed so that the author component
+  contains no hyphen. Removed the byte order mark rules for parsers and
+  generators. Removed the rule on a final record without a line break,
+  which the rule on non-conforming input already covers. Cited CSVW as
+  the source of LF and CRLF line breaks.
 
 draft-demos-ra-mtsv-00:
 : Initial version.

@@ -1,59 +1,15 @@
 # Multi-Sheet Tab-Separated Values (MTSV)
 
-This repository holds the specification for Multi-Sheet Tab-Separated Values
-(MTSV), written in Internet-Draft format.
+This is the working area for the individual Internet-Draft, "Multi-Sheet Tab-Separated Values (MTSV)".
 
-* [Official copy on the IETF Datatracker](https://datatracker.ietf.org/doc/draft-demos-ra-mtsv/)
-* [Specification source](draft-demos-ra-mtsv.md)
-* [Implementations](https://github.com/demos-ra/mtsv)
+* [Datatracker Page](https://datatracker.ietf.org/doc/draft-demosra-mtsv)
+* [Individual Draft](https://datatracker.ietf.org/doc/html/draft-demosra-mtsv)
 
-## What it is
-
-MTSV is TSV with one more dimension. TSV uses two ASCII format effectors: tab
-moves to the next field, and line feed moves to the next record. MTSV adds the
-next larger one, form feed, which moves to the next sheet. The text after a
-form feed, on the same line, is the sheet name.
-
-| Axis | Character             | Unit   |
-|------|-----------------------|--------|
-| X    | tab (HT, 0x09)        | field  |
-| Y    | line feed (LF, 0x0A)  | record |
-| Z    | form feed (FF, 0x0C)  | sheet  |
-
-A TSV file that contains no form feed, and no carriage return outside CRLF
-line breaks, is an MTSV file.
-
-MTSV defines structure only: no data types, formulas, or formatting.
-
-## Example
-
-`<TAB>` is a tab and `<FF>` is a form feed:
-
-```
-<FF>People
-Name<TAB>Age<TAB>Address
-Paul<TAB>23<TAB>1115 W Franklin
-Zeke<TAB>45<TAB>W Main St
-<FF>Animals
-Name<TAB>Age<TAB>Address
-Bessy the Cow<TAB>5<TAB>Big Farm Way
-```
-
-The same file with the real bytes is
-[examples/multiple-sheets.mtsv](examples/multiple-sheets.mtsv).
-
-## Status
-
-Individual Internet-Draft, revision -01. Not adopted by an IETF working group.
-
-* File extension: `.mtsv`
-* Media type: `text/prs.mtsv` (proposed, not yet registered with IANA)
 
 ## Contributing
 
-Discuss the specification or report problems in
-[GitHub Issues](https://github.com/demos-ra/mtsv-spec/issues).
+See the
+[guidelines for contributions](https://github.com/demos-ra/mtsv-spec/blob/main/CONTRIBUTING.md).
 
-## License
-
-[CC BY 4.0](LICENSE)
+The contributing file also has tips on how to make contributions, if you
+don't already know how to do that.
