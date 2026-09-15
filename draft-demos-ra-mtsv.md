@@ -62,28 +62,41 @@ informative:
 This document defines Multi-Sheet Tab-Separated Values (MTSV), a text
 format that carries one or more sheets of tab-separated values in a
 single file. MTSV is TSV with one additional dimension: sheets are
-separated by the ASCII Form Feed character. Every TSV file is an MTSV
-file. This document also registers the text/prs.mtsv media type.
+separated by the ASCII form feed (FF) character. Every TSV file that
+contains no FF is an MTSV file. This document also registers the
+text/prs.mtsv media type.
 
 
 --- middle
 
 # Introduction {#intro}
 
-The tab-separated values format {{TSV}} encodes one sheet of data per
+The tab-separated values format {{TSV}} encodes one set of records per
 file. Fields are separated by a tab, and records are separated by line
 breaks.
 
 Both separators are ASCII format effectors {{RFC20}}. HT moves "to the
 next in a series of predetermined positions along the printing line",
-and LF moves "to the next printing line". MTSV adds the next format
-effector in the same series, FF, which moves "to the first
+and LF moves "to the next printing line". MTSV adds FF, the format
+effector for the next larger unit, which moves "to the first
 pre-determined printing line on the next form or page". Tab gives the
 next field, line feed gives the next record, and form feed gives the
 next sheet.
 
-MTSV inherits TSV unchanged and adds only that one separator and a name
-for each sheet.
+## Relationship to TSV
+
+MTSV keeps the separators and structure of TSV, and adds only one
+separator, FF, and a name for each sheet.
+
+MTSV does not carry over three restrictions of the TSV grammar:
+
+* A field can be empty, and a record can consist of a single field, as
+  in {{RFC4180}}.
+
+* A sheet can consist of a header with no records, or of no lines at
+  all, as a sheet can have no rows in {{OOXML}}.
+
+Every TSV file that contains no FF is an MTSV file ({{data-model}}).
 
 ## Out of Scope
 
@@ -101,7 +114,8 @@ rules HTAB, LF, and CRLF.
 
 In examples, `<TAB>` denotes the tab character (%x09), as in {{TSV}},
 and `<FF>` denotes the form feed character (%x0C). Line breaks are
-shown as line breaks.
+shown as line breaks; every line shown, including the last, ends with a
+line break.
 
 This document uses the following terms:
 
@@ -124,8 +138,9 @@ sheet name:
 : The text that follows an FF on the same line.
 
 unnamed sheet:
-: The sheet formed by the content before the first FF, or by the whole
-  file if it contains no FF.
+: The sheet formed by the lines before the first FF, or by all lines of
+  a file that contains no FF. It exists only if there is at least one
+  such line.
 
 MTSV file:
 : A sequence of sheets, conforming to {{syntax}}.
@@ -143,7 +158,8 @@ parser:
 # Data Model {#data-model}
 
 A field is text. A record is an ordered sequence of fields. A sheet is a
-header and an ordered sequence of zero or more records. A sheet with no
+header and an ordered sequence of zero or more records. Every record in
+a sheet has as many fields as the header of that sheet. A sheet with no
 lines is an empty sheet; it has neither a header nor records.
 
 An MTSV file is an ordered sequence of sheets. The order of the sheets is
@@ -154,8 +170,8 @@ an unnamed sheet only if the file contains at least one line before the
 first FF. An empty sheet name is permitted. Sheet names are not required
 to be unique.
 
-A TSV file contains no FF. It is therefore an MTSV file that consists of
-exactly one unnamed sheet.
+A TSV file that contains no FF is an MTSV file that consists of exactly
+one unnamed sheet.
 
 
 # Syntax {#syntax}
@@ -175,7 +191,7 @@ MTSV uses three separators, all of which are ASCII format effectors
 | Separator | Character | Separates | Source |
 |---|---|---|---|
 | tab | HT (%x09) | fields | {{TSV}} |
-| line break | LF (%x0A) or CR LF (%x0D.0A) | records | {{TSV}} |
+| line break | LF (%x0A) or CRLF (%x0D.0A) | records | {{TSV}} |
 | form feed | FF (%x0C) | sheets | {{RFC20}} |
 
 An FF appears only at the start of a line.
@@ -184,7 +200,7 @@ An FF appears only at the start of a line.
 
 A sheet name is written on the line that begins with an FF, directly
 after the FF, and ends at the line break. A sheet name follows the same
-rules as a field: it cannot contain a tab, a line break, or an FF.
+rules as a field: it cannot contain HT, CR, LF, or FF.
 
 ## Grammar
 
@@ -212,10 +228,10 @@ the same number of fields as the header of that sheet, as required by
 
 An MTSV parser MUST accept every MTSV file that conforms to {{syntax}}.
 
-A parser MUST treat the content before the first FF, if any, as the
+A parser MUST treat the lines before the first FF, if any, as the
 unnamed sheet, and each FF line as the start of a new sheet.
 
-A parser MUST accept both LF and CR LF as line breaks, consistent with
+A parser MUST accept both LF and CRLF as line breaks, consistent with
 the default line terminators in {{CSVW}}. A parser MAY accept a final
 record that is not followed by a line break, consistent with {{RFC4180}}.
 
@@ -237,12 +253,10 @@ A generator MUST end every record with a line break. A generator
 SHOULD encode MTSV files in UTF-8, consistent with {{RFC2277}}, and MUST
 NOT add a byte order mark, consistent with {{Section 8.1 of RFC8259}}.
 
-A field or sheet name that contains a tab, a line break, or an FF cannot
-be represented in MTSV, as with fields that contain a tab in {{TSV}}. A
+A field or sheet name that contains HT, CR, LF, or FF cannot be
+represented in MTSV, as with fields that contain a tab in {{TSV}}. A
 generator MUST NOT write such a value. How a generator handles such
 values is out of scope.
-
-A generator that writes a single unnamed sheet produces a TSV file.
 
 
 # Examples
@@ -324,11 +338,12 @@ Required parameters:
 
 Optional parameters:
 : charset. MTSV has no in-band charset information, so a default is
-  needed; if charset is absent, UTF-8 is assumed, as {{Section 4 of RFC6657}}
-  specifies for text subtypes that define a default.
+  needed; if charset is absent, UTF-8 is assumed, as
+  {{Section 3 of RFC6657}} specifies for text subtypes that define a
+  default.
 
 Encoding considerations:
-: 8bit. As per {{Section 4.1.1 of RFC2046}}, this media type uses CR LF to
+: 8bit. As per {{Section 4.1.1 of RFC2046}}, this media type uses CRLF to
   denote line breaks in transport. Implementations need to be aware
   that files often use LF alone.
 
@@ -336,12 +351,12 @@ Security considerations:
 : See {{security}}.
 
 Interoperability considerations:
-: Every TSV file {{TSV}} is an MTSV file. How an application that
-  supports only TSV presents an MTSV file depends on how it splits
-  lines: some applications treat FF as a character within a field,
-  while others treat FF as a line break, as in {{UAX14}}. Sheet names
-  are not required to be unique; applications that require unique
-  names need to handle duplicates.
+: Every TSV file {{TSV}} that contains no FF is an MTSV file. How an
+  application that supports only TSV presents an MTSV file depends on
+  how it splits lines: some applications treat FF as a character
+  within a field, while others treat FF as a line break, as in
+  {{UAX14}}. Sheet names are not required to be unique; applications
+  that require unique names need to handle duplicates.
 
 Published specification:
 : This document.
