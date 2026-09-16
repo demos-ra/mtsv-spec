@@ -379,23 +379,6 @@ Spreadsheets:
   outside the scope of this document.
 
 
-# Security Considerations {#security}
-
-MTSV files are text and contain no executable content. {{TSV}} lists no
-security considerations.
-
-Applications that import MTSV files into spreadsheets can interpret
-fields that begin with characters such as "=", "+", "-", or "@" as
-formulas. Such applications need to treat imported fields as data.
-
-Sheet names can contain control characters. Applications that display
-sheet names need to take care that such characters do not mislead
-users.
-
-Parsers that do not set limits ({{parsers}}) can exhaust resources when
-reading large files or files with very many sheets.
-
-
 # IANA Considerations {#iana}
 
 ## Media Type Registration {#media-type}
@@ -469,6 +452,49 @@ Change controller:
 : Demos Ra
 
 
+# Internationalization Considerations {#i18n}
+
+This section collects the internationalization decisions of this
+document, as {{Section 6 of RFC2277}} recommends.
+
+HT, LF, CRLF, and FF are protocol elements. Fields and sheet names are
+text ({{data-model}}), as {{Section 2 of RFC2277}} requires a protocol
+to distinguish.
+
+An MTSV file carries no in-band charset information. The charset
+parameter of the media type identifies the charset ({{media-type}}), and
+UTF-8 is assumed when that parameter is absent ({{encoding}}), so that a
+stored file remains readable without it, as {{Section 3.2 of RFC2277}}
+advises. Any other charset is one registered in the IANA charset
+registry, as {{Section 3.1 of RFC2277}} requires.
+
+Sheet names are internationalized. A sheet name is text and follows the
+same rules as a field ({{data-model}}); it is not a US-ASCII identifier.
+{{Section 2 of RFC2277}} requires a document to state this.
+
+MTSV carries no language information. This document leaves language to
+the enclosing protocol or to separate metadata such as {{CSVW}}, which
+{{Section 2 of RFC2277}} permits where the responsibility belongs to
+another layer.
+
+
+# Security Considerations {#security}
+
+MTSV files are text and contain no executable content. {{TSV}} lists no
+security considerations.
+
+Applications that import MTSV files into spreadsheets can interpret
+fields that begin with characters such as "=", "+", "-", or "@" as
+formulas. Such applications need to treat imported fields as data.
+
+Sheet names can contain control characters. Applications that display
+sheet names need to take care that such characters do not mislead
+users.
+
+Parsers that do not set limits ({{parsers}}) can exhaust resources when
+reading large files or files with very many sheets.
+
+
 --- back
 
 # Change Log
@@ -481,7 +507,9 @@ draft-demosra-mtsv-00:
   that begins with U+FEFF cannot be represented. Removed the rule on a
   final record without a line break, which the rule on non-conforming
   input already covers. Cited CSVW as the source of LF and CRLF line
-  breaks.
+  breaks. Added an Internationalization Considerations section, and
+  placed the IANA, Internationalization, and Security Considerations
+  sections in the order that Section 4 of RFC 7322 recommends.
 
 draft-demos-ra-mtsv-00:
 : Initial version.
