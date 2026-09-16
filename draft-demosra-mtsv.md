@@ -254,6 +254,10 @@ new sheet.
 A parser MUST accept both LF and CRLF as line breaks, consistent with
 the default line terminators in {{CSVW}}.
 
+A parser SHOULD treat a U+FEFF character at the start of a file as an
+encoding signature and not as part of the first field, consistent with
+{{Section 6 of RFC3629}}.
+
 A parser MAY accept input that does not conform to this document.
 
 An implementation MAY set limits on the size of files, the number of
@@ -272,6 +276,10 @@ A field or sheet name that contains HT, LF, FF, or CR cannot be
 represented in MTSV, as with fields that contain a tab in {{TSV}}. A
 generator MUST NOT write such a value. How a generator handles such
 values is out of scope.
+
+The first field of the unnamed sheet cannot begin with U+FEFF, because
+a parser treats that character as an encoding signature ({{parsers}}).
+A generator MUST NOT write such a field.
 
 
 # Examples
@@ -468,10 +476,12 @@ Change controller:
 
 draft-demosra-mtsv-00:
 : Replaces draft-demos-ra-mtsv-00, renamed so that the author component
-  contains no hyphen. Removed the byte order mark rules for parsers and
-  generators. Removed the rule on a final record without a line break,
-  which the rule on non-conforming input already covers. Cited CSVW as
-  the source of LF and CRLF line breaks.
+  contains no hyphen. Replaced the byte order mark rules with a parser
+  rule that follows Section 6 of RFC 3629, and stated that a first field
+  that begins with U+FEFF cannot be represented. Removed the rule on a
+  final record without a line break, which the rule on non-conforming
+  input already covers. Cited CSVW as the source of LF and CRLF line
+  breaks.
 
 draft-demos-ra-mtsv-00:
 : Initial version.
