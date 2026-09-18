@@ -5,6 +5,7 @@ This is the working area for the individual Internet-Draft, "Multi-Sheet Tab-Sep
 * [Datatracker Page](https://datatracker.ietf.org/doc/draft-demosra-mtsv)
 * [Individual Draft](https://datatracker.ietf.org/doc/html/draft-demosra-mtsv)
 
+`examples/` holds each example of the draft as an MTSV file.
 
 ## Contributing
 

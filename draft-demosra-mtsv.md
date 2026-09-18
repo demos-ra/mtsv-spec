@@ -3,7 +3,7 @@ title: "Multi-Sheet Tab-Separated Values (MTSV)"
 abbrev: "MTSV"
 category: info
 
-docname: draft-demosra-mtsv-00
+docname: draft-demosra-mtsv-01
 submissiontype: IETF
 number:
 date:
@@ -154,12 +154,9 @@ sheet:
   {{OOXML}}.
 
 sheet name:
-: The text that follows an FF on the same line.
-
-unnamed sheet:
-: The sheet formed by the lines before the first FF, or by all lines of
-  a file that contains no FF. It exists only if there is at least one
-  such line.
+: The text that follows an FF on the same line. The first sheet of a
+  file can be written without its FF line; its sheet name is then
+  empty.
 
 MTSV file:
 : A sequence of sheets, conforming to {{syntax}}.
@@ -184,13 +181,15 @@ lines is an empty sheet; it has neither a header nor records.
 An MTSV file is an ordered sequence of sheets. The order of the sheets is
 the order in which they appear in the file.
 
-Every sheet has a sheet name, except the unnamed sheet. An MTSV file has
-an unnamed sheet only if the file contains at least one line before the
-first FF. An empty sheet name is permitted. Sheet names are not required
-to be unique.
+Every sheet has a sheet name. An empty sheet name is permitted. Sheet
+names are not required to be unique.
+
+The lines before the first FF, if there are any, form the first sheet,
+written without its FF line; its sheet name is empty.
 
 A TSV file that contains no FF, and no CR other than in CRLF line
-breaks, is an MTSV file that consists of exactly one unnamed sheet.
+breaks, is an MTSV file that consists of exactly one sheet, whose sheet
+name is empty.
 
 
 # Syntax {#syntax}
@@ -224,8 +223,8 @@ rules as a field: it cannot contain HT, LF, FF, or CR.
 ## Grammar
 
 ~~~ abnf
-mtsv-file     = unnamed-sheet *named-sheet
-unnamed-sheet = sheet-body
+mtsv-file     = first-sheet *named-sheet
+first-sheet   = sheet-body
 named-sheet   = FF sheet-name eol sheet-body
 sheet-body    = [header *record]
 header        = record
@@ -248,8 +247,8 @@ the same number of fields as the header of that sheet, as required by
 An MTSV parser MUST accept every MTSV file that conforms to {{syntax}}.
 
 A parser MUST treat the lines before the first FF, if any, as the
-unnamed sheet, and each line that begins with an FF as the start of a
-new sheet.
+first sheet, with an empty sheet name, and each line that begins with
+an FF as the start of a new sheet.
 
 A parser MUST accept both LF and CRLF as line breaks, consistent with
 the default line terminators in {{CSVW}}.
@@ -272,14 +271,13 @@ An MTSV generator MUST produce MTSV files that conform to {{syntax}}.
 A generator MUST end every record with a line break. A generator
 SHOULD encode MTSV files in UTF-8, consistent with {{RFC2277}}.
 
+A generator MUST write an FF line before every sheet, including the
+first, so that generated files can be concatenated ({{interop}}).
+
 A field or sheet name that contains HT, LF, FF, or CR cannot be
 represented in MTSV, as with fields that contain a tab in {{TSV}}. A
 generator MUST NOT write such a value. How a generator handles such
 values is out of scope.
-
-The first field of the unnamed sheet cannot begin with U+FEFF, because
-a parser treats that character as an encoding signature ({{parsers}}).
-A generator MUST NOT write such a field.
 
 
 # Examples
@@ -287,7 +285,7 @@ A generator MUST NOT write such a field.
 ## Single Sheet
 
 This is the example from {{TSV}}. It is both a TSV file and an MTSV file
-with one unnamed sheet.
+with one sheet, whose sheet name is empty.
 
 ~~~
 Name<TAB>Age<TAB>Address
@@ -312,8 +310,8 @@ Bessy the Cow<TAB>5<TAB>Big Farm Way
 
 ## Empty Sheet
 
-This MTSV file contains an unnamed sheet, an empty sheet named "Empty",
-and a sheet named "Animals".
+This MTSV file contains a first sheet with an empty sheet name, an
+empty sheet named "Empty", and a sheet named "Animals".
 
 ~~~
 Name<TAB>Age
@@ -366,8 +364,9 @@ Concatenation:
 : Concatenating MTSV files produces an MTSV file that contains the
   sheets of each file, in order, only if each non-empty file ends with a
   line break and each non-empty file after the first begins with an FF.
-  Otherwise, the unnamed sheet of a later file becomes part of the last
-  sheet of the file before it.
+  Otherwise, the first sheet of a later file becomes part of the last
+  sheet of the file before it. Files written by a generator begin with
+  an FF ({{generators}}).
 
 Unchanged structure:
 : Printing, Unicode normalization, and conversion between character
@@ -394,7 +393,7 @@ Subtype name:
 : prs.mtsv
 
 Required parameters:
-: None
+: N/A
 
 Optional parameters:
 : charset. MTSV has no in-band charset information, so a default is
@@ -421,20 +420,20 @@ Applications that use this media type:
   as text.
 
 Fragment identifier considerations:
-: None
+: N/A
 
 Additional information:
 : Deprecated alias names for this type:
-  : None
+  : N/A
 
   Magic number(s):
-  : None
+  : N/A
 
   File extension(s):
   : .mtsv
 
   Macintosh file type code(s):
-  : None
+  : N/A
 
 Person & email address to contact for further information:
 : Demos Ra (demos_ra@hotmail.com)
@@ -443,13 +442,15 @@ Intended usage:
 : COMMON
 
 Restrictions on usage:
-: None
+: N/A
 
 Author:
 : Demos Ra
 
 Change controller:
 : Demos Ra
+
+Files written by a generator begin with FF (%x0C).
 
 
 # Internationalization Considerations {#i18n}
@@ -499,6 +500,14 @@ reading large files or files with very many sheets.
 
 # Change Log
 {:removeInRFC="true"}
+
+draft-demosra-mtsv-01:
+: Gave every sheet a sheet name: the lines before the first FF form a
+  first sheet whose sheet name is empty, and the term "unnamed sheet" is
+  removed. Required generators to write an FF line before every sheet,
+  and removed the rule on a first field that begins with U+FEFF, which
+  that makes unnecessary. Used "N/A" in the registration template, as
+  Section 5.6 of RFC 6838 asks.
 
 draft-demosra-mtsv-00:
 : Replaces draft-demos-ra-mtsv-00, renamed so that the author component
