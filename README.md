@@ -2,7 +2,7 @@ mtsv-spec
 =========
 
 A plain-text file format for multi-sheet spreadsheets such as Excel (XLSX)
-workbooks: Multi-Sheet Tab-Separated Values (MTSV), registered as an IETF
+workbooks: Multi-Sheet Tab-Separated Values (MTSV), specified in an IETF
 Internet-Draft. MTSV is TSV with one more dimension: a tab separates
 fields, a line break separates records, and a form feed separates sheets,
 so a whole workbook is one plain-text file. This repository is the working
@@ -28,7 +28,7 @@ Details
 -------
 
 * Status: individual Internet-Draft
-* Media type: text/prs.mtsv, as the draft defines it
+* Media type: [text/prs.mtsv in the IANA Media Types registry](https://www.iana.org/assignments/media-types/text/prs.mtsv), as the draft defines it
 * Version: the revision number in the draft's name, on the [Datatracker](https://datatracker.ietf.org/doc/draft-demosra-mtsv/)
 * Layout: [draft-demosra-mtsv.md](draft-demosra-mtsv.md), the draft; [examples/](examples/), its examples
 * License: [LICENSE.md](LICENSE.md): every contribution is a Contribution to the IETF Standards Process, under BCP 78 and BCP 79, as [CONTRIBUTING.md](CONTRIBUTING.md) states
